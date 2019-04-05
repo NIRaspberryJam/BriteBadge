@@ -8,6 +8,8 @@ engine = create_engine('sqlite:///britebadge.db?check_same_thread=False')
 
 class Attendee(Base):
     __tablename__ = "attendees"
+    event_name = ""
+    ticket_name = ""
     attendee_id = Column(Integer, autoincrement=True, primary_key=True, unique=True, nullable=False)
     order_id = Column(Integer, nullable=False)
     event_id = Column(Integer, nullable=False)

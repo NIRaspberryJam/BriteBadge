@@ -41,7 +41,8 @@ def compare_attendees(current_attendees: List[Attendee], new_attendees: List[Att
 
                     if new_attendee.status == "Checked In":
                         print(f"Printing label for {new_attendee.first_name} {new_attendee.surname}")
-                        badge.create_label_image(f"{current_attendee.first_name} {current_attendee.surname}", current_attendee.order_id, jam_password, new_attendee.event_name["name"]["text"])
+                        badge.create_label_image(f"{current_attendee.first_name} {current_attendee.surname}", current_attendee.order_id, jam_password, new_attendee.event_name["name"]["text"], new_attendee.ticket_name)
+                        db_session.commit()
 
                 break
         else:

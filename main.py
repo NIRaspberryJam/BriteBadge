@@ -28,6 +28,7 @@ def update():
                                         , first_name=attendee["profile"]["first_name"], surname=attendee["profile"]["last_name"],
                                         status=attendee["status"]))
         new_attendee.event_name = chosen_event
+        new_attendee.ticket_name = attendee["ticket_class_name"]
         attendees.append(new_attendee)
     current_attendees = database.get_current_attendees()
     database.compare_attendees(current_attendees, attendees)

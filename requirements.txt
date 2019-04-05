@@ -1,0 +1,7 @@
+flask
+wtforms
+eventbrite
+sqlalchemy
+pillow
+qrcode
+pytz

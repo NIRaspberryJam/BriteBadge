@@ -22,13 +22,16 @@ def get_last_check_time():
     last_checked_time = db_session.query(Configuration).filter(Configuration.config_key == "last_checked_time").first()
     f = '%Y-%m-%d %H:%M:%S%z'
     if last_checked_time:
-        return datetime.datetime.strptime(last_checked_time.config_value, f)
+        to_return = datetime.datetime.strptime(last_checked_time.config_value, f)
+        last_checked_time.config_value = datetime.datetime.now(pytz.utc).strftime(f)
+        db_session.commit()
+        return to_return
     else:
         current_time = datetime.datetime.now(pytz.utc)
         t = Configuration(config_key="last_checked_time", config_value=current_time.strftime(f))
         db_session.add(t)
         db_session.commit()
-        return get_last_check_time()
+        return datetime.datetime.now(pytz.utc) - datetime.timedelta(days=360)
 
 
 def compare_attendees(current_attendees: List[Attendee], new_attendees: List[Attendee]):

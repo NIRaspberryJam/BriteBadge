@@ -36,9 +36,18 @@ def update():
 
     # To be removed eventually when Javascript is making the queries to this endpoint
     time.sleep(int(delay_between_eventbrite_queries))
-    requests.get("http://127.0.0.1:5000/update")
+    #requests.get("http://127.0.0.1:5000/update")
     return "Done"
 
 
 if __name__ == '__main__':
+    while True:
+        try:
+            update()
+        except Exception as e:
+            print("---------------")
+            print("EXCEPTION!?!?!?")
+            print(e)
+            print("---------------")
+            
     app.run()

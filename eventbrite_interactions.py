@@ -39,7 +39,7 @@ class MyEventbrite(Eventbrite):
             if r['pagination']['page_count'] <= page:
                 break
             page += 1
-        print(f"{page} queries made!")
+        print("{} queries made!".format(page))
         return {"attendees": attendees}
 
     def get_all_my_eventbrite_events(self):

@@ -32,7 +32,7 @@ def update():
         attendees.append(new_attendee)
     current_attendees = database.get_current_attendees()
     database.compare_attendees(current_attendees, attendees)
-    print(f"Checking for updates from Eventbrite took {time.time() - start_update} seconds.")
+    print("Checking for updates from Eventbrite took {} seconds.".format(time.time() - start_update))
 
     # To be removed eventually when Javascript is making the queries to this endpoint
     time.sleep(int(delay_between_eventbrite_queries))

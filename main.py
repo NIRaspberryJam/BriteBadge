@@ -6,7 +6,7 @@ from flask import Flask, render_template
 import database
 import eventbrite_interactions
 import models
-from secrets.config import delay_between_eventbrite_queries
+from secrets.config import delay_between_eventbrite_queries, eventbrite_event_id
 
 app = Flask(__name__)
 chosen_event = eventbrite_interactions.get_most_recent_eventbrite_event()
@@ -18,11 +18,11 @@ def home():
 
 
 @app.route("/update")
-def update():
+def update(event_id):
     start_update = time.time()
     print("Checking for updates")
     attendees = []
-    raw_attendees = eventbrite_interactions.get_eventbrite_attendees_for_event("57883354672", changed_since=database.get_last_check_time())["attendees"]
+    raw_attendees = eventbrite_interactions.get_eventbrite_attendees_for_event(event_id, changed_since=database.get_last_check_time())["attendees"]
     for attendee in raw_attendees:
         new_attendee = (models.Attendee(attendee_id=int(attendee["id"]), order_id=int(attendee["order_id"]), event_id=int(attendee["order_id"])
                                         , first_name=attendee["profile"]["first_name"], surname=attendee["profile"]["last_name"],
@@ -41,13 +41,22 @@ def update():
 
 
 if __name__ == '__main__':
-    while True:
-        try:
-            update()
-        except Exception as e:
-            print("---------------")
-            print("EXCEPTION!?!?!?")
-            print(e)
-            print("---------------")
-            
-    app.run()
+    if eventbrite_event_id: # Manual eventbrite id
+        event = eventbrite_interactions.get_eventbrite_event_by_id(eventbrite_event_id)
+    else:
+        event = eventbrite_interactions.get_most_recent_eventbrite_event()
+        
+    if event:
+        print("Setting up for {} event...".format(event["name"]["text"]))
+        event_id = event["id"]
+        while True:
+            try:
+                update(event_id)
+            except Exception as e:
+                print("---------------")
+                print("EXCEPTION!?!?!?")
+                print(e)
+                print("---------------")
+                
+        app.run()
+    print("Error - Unable to find any Eventbrite events on that account...")

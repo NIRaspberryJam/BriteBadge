@@ -1,4 +1,5 @@
 from eventbrite import Eventbrite
+import datetime
 
 from secrets.config import eventbrite_key
 
@@ -52,6 +53,9 @@ class MyEventbrite(Eventbrite):
 eventbrite = MyEventbrite(eventbrite_key)
 
 
+def _get_event_datetime(event):
+    return datetime.datetime.strptime(event["start"]["local"].replace("T", " "), '%Y-%m-%d %H:%M:%S')
+
 def eventbrite_test():
     print(eventbrite.get_user())
     a = eventbrite.get_user_events(eventbrite.get_user()["id"])
@@ -76,4 +80,10 @@ def get_eventbrite_attendees_for_event(event_id, changed_since=None):
 
 def get_most_recent_eventbrite_event():
     events = eventbrite.get_all_my_eventbrite_events()
-    return events[-1]
+    if events:
+        newest_event = events[0]
+        for event in events:
+            if _get_event_datetime(newest_event) < _get_event_datetime(event):
+                newest_event = event
+        return newest_event
+    return None

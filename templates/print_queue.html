@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Britebadge</h1>
+<h3>Print Queue</h3>
+    
+<br>
+<button id="submit_button" class="btn btn-info"
+                        onclick="getPrintQueue()" value="val_1" name="but1">Update Print Queue
+                </button>   <td><a href="/clear_print_queue" class="btn btn-danger" role="button">Clear Print Queue</a></td>
+<br>
+<br>
+    
+<table>
+    <tr bgcolor="#d3d3d3">
+        <th>Queue ID</th>
+        <th>Name</th>
+        <th>Order ID</th>
+        <th>Attendee ID</th>
+        <th>Printed</th>
+    </tr>
+    <tbody id="print_queue_tbody">
+
+    </tbody>
+
+</table>
+{% endblock %}

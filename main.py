@@ -1,7 +1,8 @@
+import json
 import time
 
 import requests
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 
 import database
 import eventbrite_interactions
@@ -31,7 +32,7 @@ class BackgroundPrinter(threading.Thread):
                 queue_item = database.get_next_print_queue_item(self.db_session)
                 if queue_item:
                     print("PRINTING BADGE FOR {}".format(queue_item.name))
-                    #badge.create_label_image(queue_item.name, queue_item.order_id, self.day_password, self.event_name, queue_item.ticket_name)
+                    badge.create_label_image(queue_item.name, queue_item.order_id, self.day_password, self.event_name, queue_item.ticket_name)
                     database.mark_queue_item_as_printed(self.db_session, queue_item)
                 else:
                     time.sleep(0.5)
@@ -86,7 +87,25 @@ class EventbriteWatcher(threading.Thread):
 @app.route("/")
 def home():
     attendees = database.get_current_attendees(flask_db_session, event_id)
-    return render_template("index.html", attendees=attendees)
+    return render_template("index.html", attendees=attendees, event_name=event["name"]["text"])
+
+
+@app.route("/print_queue")
+def print_queue():
+    return render_template("print_queue.html")
+
+
+@app.route("/get_print_queue_ajax", methods=['GET', 'POST'])
+def get_print_queue():
+    queue = database.get_print_queue(flask_db_session)
+    to_send = ([dict(queue_id=q.queue_id, name=q.name, order_id=q.order_id, attendee_id=q.attendee_id, printed=q.printed) for q in queue])
+    return json.dumps(to_send)
+
+
+@app.route("/clear_print_queue")
+def clear_print_queue():
+    database.clear_print_queue(flask_db_session)
+    return redirect("/print_queue")
 
 
 if __name__ == '__main__':

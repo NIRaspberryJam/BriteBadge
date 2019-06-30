@@ -65,3 +65,13 @@ def get_next_print_queue_item(db_session) -> PrintQueue:
 def mark_queue_item_as_printed(db_session, queue_item:PrintQueue):
     queue_item.printed = True
     db_session.commit()
+
+
+def get_print_queue(db_session) -> List[PrintQueue]:
+    queue = db_session.query(PrintQueue).all()
+    return sorted(queue, key=lambda x: x.queue_id, reverse=True)
+
+
+def clear_print_queue(db_session):
+    db_session.query(PrintQueue).delete()
+    db_session.commit()

@@ -39,7 +39,7 @@ function updatePrintQueueTable(printQueueData){
         print_queue_item = printQueueData[queue_id];
         var bgcolour = "";
         if (print_queue_item.printed === true){
-            bgcolour = "#42f575";
+            bgcolour = "#c4fc9f";
         }
         tableHTML = tableHTML + "<tr bgcolor='{5}' id='queue{0}' data-target='.queue{0}'> <td>{0}</td> <td> {1} </td> <td> {2} </td> <td> {3}</td>  <td> {4}</td></tr>".toString().format(print_queue_item.queue_id, print_queue_item.name, print_queue_item.order_id, print_queue_item.attendee_id, print_queue_item.printed, bgcolour);
 

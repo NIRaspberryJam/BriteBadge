@@ -5,13 +5,14 @@ The rough principle is based off [eventbadge](https://github.com/triblondon/even
 BriteBadge in comparison to eventbadge lacks any web interface, but is designed to run headless off a Raspberry Pi (using the brother_ql Python library).   
 Like eventbadge, BriteBadge is designed to be used with a Brother QL-570 label printer. It is preconfigured to use 29mm x 90mm labels.      
 
+![Example badge](example_badge.jpg)
+
 ### Setting up
 1. Copy the `secrets/config_example.py` file to `secrets/config.py`.   
-2. Edit the `secrets/config.py` file to add the Eventbrite event id, your eventbrite api key, a NIJIS day password (if using NIJIS, otherwise leave blank) and a delay between queries to Eventbrite.   
-It is recommended to keep the delay at 4+ seconds.   
+2. Edit the `secrets/config.py` file, following the instructions in the comments. You will need your Eventbrite API key as a minimum.   
 3. Install all the requirements of the project using `pip3 install -r requirements.txt`.   
 4. Customise your label design (see below).   
-5. To run the application, run with `main.ly` file with Python 3.   
+5. To run the application, run with `main.py` file with Python 3.   
 
 
 ### Rate limits   

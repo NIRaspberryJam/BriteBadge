@@ -1,8 +1,9 @@
 import json
+import sys
 import time
 
 import requests
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 
 import database
 import eventbrite_interactions
@@ -11,6 +12,9 @@ from secrets.config import delay_between_eventbrite_queries, eventbrite_event_id
 
 import threading
 import badge
+
+import secrets.config as config
+
 app = Flask(__name__)
 chosen_event = eventbrite_interactions.get_most_recent_eventbrite_event()
 
@@ -81,7 +85,15 @@ class EventbriteWatcher(threading.Thread):
 
         # To be removed eventually when Javascript is making the queries to this endpoint
         time.sleep(int(delay_between_eventbrite_queries))
-        
+
+
+def get_day_password():
+    data = { "token": config.nijis_api_key,}
+    res = requests.post('{}/api/get_jam_day_password'.format(config.nijis_base_url), json=json.dumps(data))
+    if res:
+        return res.json()["jam_day_password"]
+    print("Unable to get Jam day password...")
+    sys.exit(1)
 
 
 @app.route("/")
@@ -102,6 +114,13 @@ def get_print_queue():
     return json.dumps(to_send)
 
 
+@app.route("/add_badge_to_queue", methods=['GET', 'POST'])
+def add_badge_to_queue():
+    attendee_id = request.form["attendee_id"]
+    database.add_to_print_queue(flask_db_session, attendee_id)
+    return ""
+
+
 @app.route("/clear_print_queue")
 def clear_print_queue():
     database.clear_print_queue(flask_db_session)
@@ -117,8 +136,8 @@ if __name__ == '__main__':
     if event:
         print("Setting up for {} event...".format(event["name"]["text"]))
         event_id = event["id"]
-        
-        background_printer = BackgroundPrinter("Testing", "Awesome")
+
+        background_printer = BackgroundPrinter(day_password=get_day_password(), event_name=event["name"]["text"])
         background_printer.daemon = True
         background_printer.start()
 

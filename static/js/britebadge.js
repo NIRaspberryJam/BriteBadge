@@ -47,3 +47,22 @@ function updatePrintQueueTable(printQueueData){
     $('#print_queue_tbody').html(tableHTML);
 
 }
+
+
+function printBadge(attendee_id) {
+    $.ajax({
+        type: "POST",
+        url: "/add_badge_to_queue",
+        data: {
+            attendee_id: attendee_id,
+        },
+        success: function (result) {
+            var cell = document.getElementById("badges-printed-" + attendee_id);
+            cell.textContent = (parseInt(cell.innerText) + 1).toString()
+        },
+        error: function (result) {
+            alert(result.toString())
+
+        }
+    });
+}

@@ -75,3 +75,9 @@ def get_print_queue(db_session) -> List[PrintQueue]:
 def clear_print_queue(db_session):
     db_session.query(PrintQueue).delete()
     db_session.commit()
+
+
+def add_to_print_queue(db_session, attendee_id):
+    attendee = db_session.query(Attendee).filter(Attendee.attendee_id == int(attendee_id)).first()
+    db_session.add(PrintQueue(name="{} {}".format(attendee.first_name, attendee.surname), order_id=attendee.order_id, attendee_id=attendee.attendee_id, ticket_name=attendee.ticket_name, printed=False))
+    db_session.commit()

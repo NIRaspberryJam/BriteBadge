@@ -7,3 +7,4 @@ qrcode
 pytz
 brother_ql
 pyusb
+requests

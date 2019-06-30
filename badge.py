@@ -13,10 +13,10 @@ def generate_qr_code(URL):
     return img
 
 
-def create_label_image(name, order_id, password, eventname, ticket_name):
+def create_label_image(name, order_id, password, eventname, ticket_name, use_nijis, nijis_url):
     if ticket_name.startswith("Parent"):
         ticket_name = "Parent/Guardian"
-    qr_code = generate_qr_code('https://workshops.niraspberryjam.com/qr/{}/{}'.format(order_id, password))
+    qr_code = generate_qr_code('{}/qr/{}/{}'.format(nijis_url, order_id, password))
 
     name_font = ImageFont.truetype("arial.ttf", 80)
     jam_font = ImageFont.truetype("arial.ttf", 30)
@@ -27,9 +27,10 @@ def create_label_image(name, order_id, password, eventname, ticket_name):
     d.text((20, 120), name, fill="black", font=name_font)
     d.text((20, 20), eventname, fill="black", font=jam_font)
     d.text((20, 60), "Order ID : {} -- {}".format(order_id, ticket_name), fill="black", font=jam_font)
-    d.text((20, 250), "Workshops - https://workshops.niraspberryjam.com", fill="black", font=jam_font)
-    img.paste(qr_code.resize((270, 270), Image.ANTIALIAS), (720, 0))
-    d.text((740, 250), "Scan me with your phone \n to book into workshops!", fill="black", font=qr_font)
+    if use_nijis:
+        d.text((20, 250), "Workshops - {}".format(nijis_url), fill="black", font=jam_font)
+        img.paste(qr_code.resize((270, 270), Image.ANTIALIAS), (720, 0))
+        d.text((740, 250), "Scan me with your phone \n to book into workshops!", fill="black", font=qr_font)
 
     img.save('generated_badge.png')
     sleep(0.1)

@@ -20,14 +20,14 @@ class PrintQueue(Base):
     name = Column(String(70), nullable=False)
     order_id = Column(Integer, nullable=False)
     attendee_id = Column(ForeignKey('attendees.attendee_id'), nullable=False)
-    ticket_name = Column(String(50), nullable=False)
     printed = Column(Boolean, nullable=False)
+    attendee = relationship("Attendee")
 
 
 class Attendee(Base):
     __tablename__ = "attendees"
     event_name = ""
-    ticket_name = ""
+    ticket_name = Column(String(50), nullable=False)
     attendee_id = Column(Integer, autoincrement=True, primary_key=True, unique=True, nullable=False)
     order_id = Column(Integer, nullable=False)
     event_id = Column(Integer, nullable=False)

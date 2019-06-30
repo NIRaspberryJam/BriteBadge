@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="/static/css/britebadge.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap-select.min.js"></script>
+    <script src="/static/js/britebadge.js"></script>
+    <script defer src="/static/js/fontawesome-all.js"></script>
+    <title>Britebadge</title>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Britebadge</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+               
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="pinet-main-body">
+    {% from "_formhelpers.html" import render_field %}
+    <div class="{{container_name or 'container'}}">
+    {% block content %}
+
+    {% endblock %}
+
+    </div>
+</div>
+</body>
+</html>

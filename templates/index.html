@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Britebadge</h1>
+
+<table>
+    <tr>
+        <th>First Name</th>
+        <th>Surname</th>
+        <th>Badges Printed</th>
+        <th>Print</th>
+    </tr>
+    
+    {% for attendee in attendees %}
+        {% if attendee.badges_printed %}
+            <tr bgcolor="#7cfc00">
+        {% else %}
+            <tr>
+        {% endif %}
+            <td>{{ attendee.first_name }}</td>
+            <td>{{ attendee.surname }}</td>
+            <td>{{ attendee.badges_printed | count }}</td>
+            <td></td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

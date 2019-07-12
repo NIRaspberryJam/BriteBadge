@@ -145,6 +145,6 @@ if __name__ == '__main__':
         eventbrite_watcher = EventbriteWatcher(event)
         eventbrite_watcher.daemon = True
         eventbrite_watcher.start()
-        app.run()
+        app.run(host='0.0.0.0')
     else:
         print("Error - Unable to find any Eventbrite events on that account...")

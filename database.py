@@ -9,7 +9,7 @@ from models import *
 
 
 def setup_db_connection():
-    thread_engine = create_engine('sqlite:///britebadge.db?check_same_thread=False')
+    thread_engine = create_engine('sqlite:////britebadge.db?check_same_thread=False')
     Base.metadata.bind = thread_engine
     DBParent = sessionmaker(bind=thread_engine)
     db_session = DBParent()

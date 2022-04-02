@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
-engine = create_engine('sqlite:///britebadge.db?check_same_thread=False')
+engine = create_engine('sqlite:////britebadge.db?check_same_thread=False')
 
 
 class Configuration(Base):

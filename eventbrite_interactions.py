@@ -43,11 +43,10 @@ class MyEventbrite(Eventbrite):
         print("{} queries made!".format(page))
         return {"attendees": attendees}
 
+
     def get_all_my_eventbrite_events(self):
-        my_id = eventbrite.get_user()['id']
-        events = eventbrite.get_user_events(my_id)
-        # events = eventbrite.event_search(**{'user.id': my_id})
-        return events["events"]
+        events = get_eventbrite_events_name_id()
+        return events
 
 
 eventbrite = MyEventbrite(eventbrite_key)
@@ -67,11 +66,17 @@ def get_eventbrite_event_by_id(id):
 
 
 def get_eventbrite_events_name_id():
-    events = eventbrite.get_user_owned_events(eventbrite.get_user()["id"])
-    jam_event_names = []
-    for event in events["events"]:
-        jam_event_names.append({"name": event["name"]["text"], "id": event["id"]})
-    return jam_event_names
+    if not eventbrite_key:
+        return []
+    organisations = eventbrite.get("/users/me/organizations/")["organizations"]
+    if organisations:
+        eventbrite_organisation = organisations[0]
+    else:
+        return {}
+
+
+    events = eventbrite.get(f"/organizations/{eventbrite_organisation['id']}/events/", data={"page_size":200})
+    return events["events"]
 
 
 def get_eventbrite_attendees_for_event(event_id, changed_since=None):

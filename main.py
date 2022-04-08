@@ -63,6 +63,7 @@ class EventbriteWatcher(threading.Thread):
         while True:
             try:
                 display.update_display()
+                self.update()
             except Exception as e:
                 print("---------------")
                 print("EXCEPTION!?!?!?")

@@ -1,11 +1,13 @@
 import json
 import sys
 import time
+import netifaces
 
 import requests
 from flask import Flask, render_template, redirect, request
 
 import database
+import display
 import eventbrite_interactions
 import models
 from secrets.config import delay_between_eventbrite_queries, eventbrite_event_id
@@ -57,9 +59,10 @@ class EventbriteWatcher(threading.Thread):
     
     
     def run(self):
+        display.write_ip()
         while True:
             try:
-                self.update()
+                display.update_display()
             except Exception as e:
                 print("---------------")
                 print("EXCEPTION!?!?!?")
@@ -81,6 +84,7 @@ class EventbriteWatcher(threading.Thread):
         current_attendees = database.get_current_attendees(self.db_session, event_id)
         database.compare_attendees(self.db_session, current_attendees, attendees)
         print("Checking for updates from Eventbrite took {} seconds.".format(time.time() - start_update))
+        display.update_display()
 
         # To be removed eventually when Javascript is making the queries to this endpoint
         time.sleep(int(delay_between_eventbrite_queries))
@@ -145,6 +149,8 @@ if __name__ == '__main__':
         eventbrite_watcher = EventbriteWatcher(event)
         eventbrite_watcher.daemon = True
         eventbrite_watcher.start()
+        display.display_text("Britebadge")
+        display.display_text("Starting...", 0, 1)
         app.run(host='0.0.0.0', port=80)
     else:
         print("Error - Unable to find any Eventbrite events on that account...")

@@ -8,3 +8,4 @@ pytz
 brother_ql
 pyusb
 requests
+netifaces

@@ -142,24 +142,32 @@ def reload_all_attendees():
 
 
 if __name__ == '__main__':
-    if eventbrite_event_id: # Manual eventbrite id
-        event = eventbrite_interactions.get_eventbrite_event_by_id(eventbrite_event_id)
-    else:
-        event = eventbrite_interactions.get_most_recent_eventbrite_event_from_nijis()
+    attempts = 0
+    while True:
+        attempts = attempts + 1
+        if eventbrite_event_id: # Manual eventbrite id
+            event = eventbrite_interactions.get_eventbrite_event_by_id(eventbrite_event_id)
+        else:
+            event = eventbrite_interactions.get_most_recent_eventbrite_event_from_nijis()
 
-    if event:
-        print("Setting up for {} event...".format(event["name"]["text"]))
-        event_id = event["id"]
+        if event:
+            print("Setting up for {} event...".format(event["name"]["text"]))
+            event_id = event["id"]
 
-        background_printer = BackgroundPrinter(day_password=get_day_password(), event_name=event["name"]["text"])
-        background_printer.daemon = True
-        background_printer.start()
+            background_printer = BackgroundPrinter(day_password=get_day_password(), event_name=event["name"]["text"])
+            background_printer.daemon = True
+            background_printer.start()
 
-        eventbrite_watcher = EventbriteWatcher(event)
-        eventbrite_watcher.daemon = True
-        eventbrite_watcher.start()
-        display.display_text("Britebadge")
-        display.display_text("Starting...", 0, 1)
-        app.run(host='0.0.0.0', port=80)
-    else:
-        print("Error - Unable to find any Eventbrite events on that account...")
+            eventbrite_watcher = EventbriteWatcher(event)
+            eventbrite_watcher.daemon = True
+            eventbrite_watcher.start()
+            display.display_text("Britebadge")
+            display.display_text("Starting...", 0, 1)
+            app.run(host='0.0.0.0', port=80)
+
+        elif attempts > 60:
+            print("Error - Unable to find a valid Eventbrite event (check selected event on NIJIS). 60 attempts have been made, giving up now...")
+
+        else:
+            print("Error - Unable to find a valid Eventbrite event (check selected event on NIJIS). Will try again in 60 seconds")
+            time.sleep(60)

@@ -37,6 +37,13 @@ def get_last_check_time(db_session):
         return datetime.datetime.now(pytz.utc) - datetime.timedelta(days=360)
 
 
+def reset_last_check_time(db_session):
+    last_checked_time = db_session.query(Configuration).filter(Configuration.config_key == "last_checked_time").first()
+    if last_checked_time:
+        db_session.delete(last_checked_time)
+        db_session.commit()
+
+
 def compare_attendees(db_session, current_attendees: List[Attendee], new_attendees: List[Attendee]):
     for new_attendee in new_attendees:
         for current_attendee in current_attendees:

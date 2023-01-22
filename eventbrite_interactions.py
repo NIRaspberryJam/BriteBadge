@@ -1,7 +1,8 @@
+import requests
 from eventbrite import Eventbrite
 import datetime
 
-from secrets.config import eventbrite_key
+from secrets.config import eventbrite_key, nijis_base_url, nijis_api_key
 
 
 class MyEventbrite(Eventbrite):
@@ -91,4 +92,17 @@ def get_most_recent_eventbrite_event():
             if _get_event_datetime(newest_event) < _get_event_datetime(event):
                 newest_event = event
         return newest_event
+    return None
+
+
+def get_most_recent_eventbrite_event_from_nijis():
+    response = requests.post(url=f"{nijis_base_url}/api/current_jam_info_post", data={"token": nijis_api_key})
+    if response.ok:
+        if response.json()["event_source"] == "eventbrite":
+            eventbrite_id = response.json()["jam_id"]
+            return get_eventbrite_event_by_id(eventbrite_id)
+        else:
+            print("Event type selected on NIJIS server isn't an Eventbrite event!")
+    else:
+        print(f"NIJIS server responded with an error! {response.status_code}")
     return None

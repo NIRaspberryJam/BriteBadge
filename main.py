@@ -2,15 +2,16 @@ import json
 import sys
 import time
 import netifaces
+from secrets.config import delay_between_eventbrite_queries, eventbrite_event_id
 
 import requests
 from flask import Flask, render_template, redirect, request
 
 import database
+
 import display
 import eventbrite_interactions
 import models
-from secrets.config import delay_between_eventbrite_queries, eventbrite_event_id
 
 import threading
 import badge
@@ -133,11 +134,18 @@ def clear_print_queue():
     return redirect("/print_queue")
 
 
+@app.route("/reload_all_attendees")
+def reload_all_attendees():
+    database.reset_last_check_time(flask_db_session)
+    time.sleep(7)  # Needed to allow the other thread to download up-to-date attendees
+    return redirect("/")
+
+
 if __name__ == '__main__':
     if eventbrite_event_id: # Manual eventbrite id
         event = eventbrite_interactions.get_eventbrite_event_by_id(eventbrite_event_id)
     else:
-        event = eventbrite_interactions.get_most_recent_eventbrite_event()
+        event = eventbrite_interactions.get_most_recent_eventbrite_event_from_nijis()
 
     if event:
         print("Setting up for {} event...".format(event["name"]["text"]))

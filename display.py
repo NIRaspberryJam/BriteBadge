@@ -12,7 +12,7 @@ import datetime
 
 try: # Check if HAT actually attached
     if DISPLAY:
-        dothat.backlight.rgb(190, 190, 190)
+        backlight.rgb(190, 190, 190)
 except:
     DISPLAY = False
 
